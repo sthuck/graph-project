@@ -29,8 +29,8 @@ public class run2 {
 	dijkstra.Do();
 	System.out.println("Distance is"+Arrays.toString(dijkstra.dist));
 	//graph.toCSV("new.csv");
-	Graph graph2 = graph.toUndirectedUnweighted();
-	List<Set<Vertex>> elements = graph2.getConnectedElements();
+	//Graph graph2 = graph.toUndirectedUnweighted();
+	List<Set<Vertex>> elements = graph.getConnectedElements();
 	System.out.println(elements);
 	
     }

@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.lang.Math;
 
 public class run {
 
@@ -12,22 +8,10 @@ public class run {
 		Double prob = Double.parseDouble(args[1]);
 		int max_weight = Integer.parseInt(args[2]) - 1;
 		int r = Integer.parseInt(args[3]);
-		Random rand = new Random();
 
-		List<Vertex> vertices = new ArrayList<Vertex>(n);
-		for (int i = 0; i < n; i++)
-			vertices.add(new Vertex(i));
-		List<Edge> edges = new ArrayList<Edge>();
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++) {
-				if (i != j && Math.random() < prob) {
-					Edge e = new Edge(i + "->" + j, vertices.get(i), vertices.get(j), rand.nextInt(max_weight) + 1);
-					edges.add(e);
-					vertices.get(i).adjencies.add(e);
-				}
-			}
+		
 		System.out.println("Printing the Graph");
-		Graph graph = new Graph(vertices, edges);
+		Graph graph = Graph.createRandomGraph(n, prob, max_weight);
 		System.out.println(graph.toString());
 		graph.MakeGraphConnected();
 		graph.toCSV("orig-edges.csv", "orig-nodes.csv");
