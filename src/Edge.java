@@ -1,4 +1,8 @@
-public class Edge implements Comparable<Edge> {
+import java.io.Serializable;
+
+public class Edge implements Comparable<Edge>,Serializable {
+
+    private static final long serialVersionUID = -92339852774952104L;
 	public final String id;
 	public final Vertex source;
 	public final Vertex destination;
