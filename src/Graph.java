@@ -270,6 +270,21 @@ public class Graph implements Serializable {
 	}
     }
     
+    public Graph Kruskal() {
+	int n = this.vertexes.size();
+	//Setting up new Graph
+	List<Vertex> vertices = new ArrayList<Vertex>(n);
+	for (int i = 0; i < n; i++)
+	    vertices.add(new Vertex(i));
+	List<Edge> edges = new ArrayList<Edge>();
+	
+	List<>
+	
+	
+	return new Graph(vertices, edges);
+	
+    }
+    
     public int[][] Floyd_Warshall() {
 	int[][] dist = new int[vertexes.size()][vertexes.size()];
 	for (Edge e : edges)
