@@ -6,9 +6,9 @@ public class Edge implements Comparable<Edge>,Serializable {
 	public final String id;
 	public final Vertex source;
 	public final Vertex destination;
-	public final int weight;
+	public final double weight;
 
-	public Edge(String id, Vertex source, Vertex destination, int weight) {
+	public Edge(String id, Vertex source, Vertex destination, double weight) {
 		this.id = id;
 		this.source = source;
 		this.destination = destination;
@@ -27,7 +27,7 @@ public class Edge implements Comparable<Edge>,Serializable {
 		return source;
 	}
 
-	public int getWeight() {
+	public double getWeight() {
 		return weight;
 	}
 
@@ -38,7 +38,7 @@ public class Edge implements Comparable<Edge>,Serializable {
 
 	@Override
 	public int compareTo(Edge o) {
-		return Integer.compare(this.weight, o.weight);
+		return Double.compare(this.weight, o.weight);
 	}
 
 }

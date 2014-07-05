@@ -11,12 +11,12 @@ public class RunFromTextFile {
 	System.out.println("Loading the Graph");
 	Graph graph = Graph.FromMatrix(n, filename);
 	System.out.println("Running Floyd-Marshell");
-	int dist[][] = graph.Floyd_Warshall();
+	double dist[][] = graph.Floyd_Warshall();
 	System.out.println("Generating Spanner");
 	Graph spanner = graph.MakeRSpanner(r);
 	spanner.toCSV(args[3]+"-edges.csv", args[3]+"-nodes.csv");
 	System.out.println("Running FloydMarshell on spanner");
-	int dist2[][] = spanner.Floyd_Warshall();
+	double dist2[][] = spanner.Floyd_Warshall();
 	System.out.println("Verifying Distances are no larger than parameter r="+r);
 	int size = dist.length;
 	for (int i=0;i<size;i++) 

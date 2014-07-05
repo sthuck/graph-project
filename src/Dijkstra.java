@@ -6,9 +6,9 @@ import java.util.PriorityQueue;
 public class Dijkstra {
 
 	private class CompareByMindist implements Comparator<Vertex> {
-		private Integer dist[];
+		private Double dist[];
 
-		public CompareByMindist(Integer[] dist) {
+		public CompareByMindist(Double[] dist) {
 			super();
 			this.dist = dist;
 		}
@@ -22,7 +22,7 @@ public class Dijkstra {
 
 	Graph g;
 	Vertex source;
-	public Integer dist[];
+	public Double dist[];
 	public Vertex previous[];
 	CompareByMindist mindist;
 	PriorityQueue<Vertex> vertexQueue;
@@ -30,7 +30,7 @@ public class Dijkstra {
 	public Dijkstra(Graph g) {
 		super();
 		this.g = g;
-		dist = new Integer[g.vertexes.size()];
+		dist = new Double[g.vertexes.size()];
 		previous = new Vertex[g.vertexes.size()];
 		mindist = new CompareByMindist(dist);
 		vertexQueue = new PriorityQueue<>(g.vertexes.size(), mindist);
@@ -38,11 +38,11 @@ public class Dijkstra {
 
 	public void Do(Vertex source) {
 		vertexQueue.clear();
-		int alt;
-		dist[source.id] = 0;
+		Double alt;
+		dist[source.id] = 0D;
 		for (Vertex v : g.vertexes) {
 			if (v != source) {
-				dist[v.id] = Integer.MAX_VALUE;
+				dist[v.id] = Double.POSITIVE_INFINITY;
 				previous[v.id] = null;
 			}
 			vertexQueue.add(v);
@@ -52,7 +52,7 @@ public class Dijkstra {
 			Vertex u = vertexQueue.poll();
 			for (Edge e : u.adjencies) {
 				Vertex v = e.destination;
-				alt = (dist[u.id] == Integer.MAX_VALUE) ? Integer.MAX_VALUE : dist[u.id] + e.weight;
+				alt =  dist[u.id] + e.weight;
 				if (alt < dist[v.id]) {
 					dist[v.id] = alt;
 					previous[v.id] = u;

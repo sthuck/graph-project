@@ -65,8 +65,8 @@ public class Graph implements Serializable {
 		return edges;
 	}
 
-	public int[][] toMatrix() {
-		int[][] ans = new int[vertexes.size()][vertexes.size()];
+	public double[][] toMatrix() {
+		double[][] ans = new double[vertexes.size()][vertexes.size()];
 		int n = edges.size();
 		for (int i = 0; i < n; i++) {
 			Edge e = edges.get(i);
@@ -195,20 +195,20 @@ public class Graph implements Serializable {
 
 	public Graph MakeRSpanner(int r) {
 		Graph res = Graph.newEmptyGraph(this.getGraphSize());
-		int[][] results = new int[this.vertexes.size()][this.vertexes.size()]; //array for dijkstra results
-		for (int[] arr : results)
-			arr[0]=-1;
-		Dijkstra d = new Dijkstra(this);
+		
+		Dijkstra d = new Dijkstra(res);
 		
 		Collections.sort(this.edges);
 		for (Edge e : this.edges) {
 			int id = e.source.id;
-			if (results[id][0]==-1) {    //do dijkstra if we didnt already
-				d.Do(res.vertexes.get(id));
-				System.arraycopy(d.dist, 0, results[id], 0, d.dist.length);
-			}
-			int shortestpath = results[id][e.destination.id];
-			if ((r * e.weight) < shortestpath) 
+			d.Do(res.vertexes.get(id));
+			double shortestpath = d.dist[e.destination.id];
+			double r2;
+			if (r==-1)
+				r2 = Double.POSITIVE_INFINITY;
+			else
+				r2 = r;
+			if ((r2 * e.weight) <= shortestpath) 
 				res.addEdge(e.source.id, e.destination.id, e.weight);
 		}
 		return res;
@@ -216,7 +216,7 @@ public class Graph implements Serializable {
 
 	@Override
 	public String toString() {
-		int[][] mat = this.toMatrix();
+		double[][] mat = this.toMatrix();
 		StringBuilder res = new StringBuilder(this.vertexes.size() * (this.vertexes.size() * 5 + 2));
 		int n = mat.length;
 		for (int i = 0; i < n; i++) {
@@ -276,17 +276,20 @@ public class Graph implements Serializable {
 		set.add(this.vertexes.get(0));
 
 		Collections.sort(this.edges);
-		for (Edge e : this.edges) {
-			if (set.contains(e.source) && !set.contains(e.destination)) {
-				set.add(e.destination);
-				g.addEdge(e.source.id, e.destination.id, e.weight);
+		while (set.size() != g.getGraphSize()) {
+			for (Edge e : this.edges) {
+				if (set.contains(e.source) && !set.contains(e.destination)) {
+					set.add(e.destination);
+					g.addEdge(e.source.id, e.destination.id, e.weight);
+					break;
+				}
 			}
 		}
 		return g;
 	}
 
 	
-	public void addEdge(int source_id, int destination_id, int weight) {
+	public void addEdge(int source_id, int destination_id, double weight) {
 
 		Edge e = new Edge(source_id + "->" + destination_id, this.vertexes.get(source_id), vertexes.get(destination_id), weight);
 		Edge e2 = new Edge(destination_id + "->" + source_id, this.vertexes.get(destination_id), this.vertexes.get(source_id),
@@ -297,8 +300,8 @@ public class Graph implements Serializable {
 		this.vertexes.get(destination_id).adjencies.add(e2);
 	}
 
-	public int[][] Floyd_Warshall() {
-		int[][] dist = new int[vertexes.size()][vertexes.size()];
+	public double[][] Floyd_Warshall() {
+		double[][] dist = new double[vertexes.size()][vertexes.size()];
 		for (Edge e : edges)
 			dist[e.source.id][e.destination.id] = e.weight;
 

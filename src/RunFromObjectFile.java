@@ -11,12 +11,12 @@ public class RunFromObjectFile {
 		// System.out.println("Pringing the Graph");
 		// System.out.println(graph.toString());
 		System.out.println("Running Floyd-Marshell");
-		int dist[][] = graph.Floyd_Warshall();
+		double dist[][] = graph.Floyd_Warshall();
 		System.out.println("Generating Spanner");
 		Graph spanner = graph.MakeRSpanner(r);
 		spanner.toCSV(args[2] + "-edges.csv", args[2] + "-nodes.csv");
 		System.out.println("Running FloydMarshell on spanner");
-		int dist2[][] = spanner.Floyd_Warshall();
+		double dist2[][] = spanner.Floyd_Warshall();
 		System.out.println("Verifying Distances are no larger than parameter r=" + r);
 		int n = dist.length;
 		for (int i = 0; i < n; i++)
