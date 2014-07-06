@@ -15,7 +15,11 @@ public class Dijkstra {
 
 		@Override
 		public int compare(Vertex arg0, Vertex arg1) {
-			return dist[arg0.id].compareTo(dist[arg1.id]);
+			int res = dist[arg0.id].compareTo(dist[arg1.id]);
+			if (res==0) return -1;
+			return res; 
+			//why the -1?
+			//Answer: it's an ugly hack to solve adding an existing element to the priority queue
 		}
 
 	}
@@ -39,23 +43,28 @@ public class Dijkstra {
 	public void Do(Vertex source) {
 		vertexQueue.clear();
 		Double alt;
+		boolean visited[] = new boolean[this.g.getGraphSize()];
 		dist[source.id] = 0D;
 		for (Vertex v : g.vertexes) {
 			if (v != source) {
 				dist[v.id] = Double.POSITIVE_INFINITY;
 				previous[v.id] = null;
 			}
-			vertexQueue.add(v);
+			else vertexQueue.add(v);
 		}
 
 		while (!vertexQueue.isEmpty()) {
 			Vertex u = vertexQueue.poll();
+			if (visited[u.id])
+				continue;
+			visited[u.id]=true;
 			for (Edge e : u.adjencies) {
 				Vertex v = e.destination;
 				alt =  dist[u.id] + e.weight;
 				if (alt < dist[v.id]) {
 					dist[v.id] = alt;
 					previous[v.id] = u;
+					vertexQueue.add(v);
 				}
 			}
 		}

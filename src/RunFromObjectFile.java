@@ -29,6 +29,7 @@ public class RunFromObjectFile {
 		System.out.println("Finding MST");
 		Graph mst = graph.MST_Prim();
 		System.out.println("Number of edges in Minimum Spaning Tree:" + mst.edges.size() / 2);
+		mst.toCSV("MST-edges.csv", "MST-nodes.csv");
 		System.out.println("Finished!");
 
 	}
