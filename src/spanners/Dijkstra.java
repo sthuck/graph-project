@@ -1,3 +1,4 @@
+package spanners;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -58,8 +59,8 @@ public class Dijkstra {
 			if (visited[u.id])
 				continue;
 			visited[u.id]=true;
-			for (Edge e : u.adjencies) {
-				Vertex v = e.destination;
+			for (Edge e : g.adjencies.get(u.id)) {
+				Vertex v = (u!=e.destination) ? e.destination : e.source; //undirected graph, edges goes both ways
 				alt =  dist[u.id] + e.weight;
 				if (alt < dist[v.id]) {
 					dist[v.id] = alt;

@@ -1,3 +1,5 @@
+package spanners;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Graph implements Serializable {
 	/**
@@ -26,6 +30,7 @@ public class Graph implements Serializable {
 	private final int n;
 	public final List<Vertex> vertexes;
 	public final List<Edge> edges;
+	public List<List<Edge>> adjencies;
 
 	static public Graph createRandomGraph(int n, double prob, int max_weight) {
 		Random rand = new Random();
@@ -39,13 +44,24 @@ public class Graph implements Serializable {
 			}
 		return g;
 	}
-	
+
 	public Graph(List<Vertex> vertexes, List<Edge> edges) {
 		this.vertexes = vertexes;
 		this.edges = edges;
 		this.n = vertexes.size();
+		this.adjencies = new ArrayList<List<Edge>>(this.n);
+		for (int i = 0; i < n; i++) {
+			List<Edge> adj = new LinkedList<Edge>();
+			this.adjencies.add(adj);
+		}
 	}
 
+	/**
+	 * Returns a new empty graph
+	 * 
+	 * @param n
+	 * @return
+	 */
 	static public Graph newEmptyGraph(int n) {
 		List<Vertex> vertices = new ArrayList<Vertex>(n);
 		for (int i = 0; i < n; i++)
@@ -57,6 +73,7 @@ public class Graph implements Serializable {
 	public int getGraphSize() {
 		return this.n;
 	}
+
 	public List<Vertex> getVertexes() {
 		return vertexes;
 	}
@@ -88,11 +105,8 @@ public class Graph implements Serializable {
 				assert (line.length == size);
 				for (int j = 0; j < i; j++) {
 					int weight = Integer.parseInt(line[j]);
-					if (weight != 0) {
-						Edge e = new Edge(i + "->" + j, res.vertexes.get(i), res.vertexes.get(j), weight);
-						res.edges.add(e);
-						res.vertexes.get(i).adjencies.add(e);
-					}
+					if (weight != 0)
+						res.addEdge(i, j, weight);
 				}
 			}
 			reader.close();
@@ -127,8 +141,13 @@ public class Graph implements Serializable {
 			all.remove(v);
 			while (!Q.isEmpty()) {
 				Vertex t = Q.poll();
-				for (Edge e : t.adjencies) {
-					Vertex u = e.destination;
+				for (Edge e : this.adjencies.get(t.id)) {
+					Vertex u = (t != e.destination) ? e.destination : e.source; // undirected
+																				// graph,
+																				// edges
+																				// goes
+																				// both
+																				// ways
 					if (!V.contains(u)) {
 						V.add(u);
 						all.remove(u);
@@ -162,18 +181,19 @@ public class Graph implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename_nodes));
-			writer.write("Id,Label\n");
-			for (Vertex v : this.vertexes) {
-				writer.write("" + v.id);
-				writer.write("," + v.id);
-				writer.write("\n");
+		if (filename_nodes!=null) {
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(filename_nodes));
+				writer.write("Id,Label\n");
+				for (Vertex v : this.vertexes) {
+					writer.write("" + v.id);
+					writer.write("," + v.id);
+					writer.write("\n");
+				}
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -194,22 +214,43 @@ public class Graph implements Serializable {
 	}
 
 	public Graph MakeRSpanner(int r) {
-		Graph res = Graph.newEmptyGraph(this.getGraphSize());
-		
+		Graph res = new Graph(this.vertexes, new ArrayList<Edge>());
 		Dijkstra d = new Dijkstra(res);
+		double r2;
+		if (r == -1)
+			r2 = Double.POSITIVE_INFINITY;
+		else r2 = r;
+		int n = res.getGraphSize();
 		
+		Double cache[][] = new Double[n][n];
+		boolean cache_valid[] = new boolean[n];
+		
+		int i = 0;
+		int j = 0;
+		String s = "Spanner: Edge %d/" + this.edges.size() + "\n";
+
 		Collections.sort(this.edges);
 		for (Edge e : this.edges) {
+			if (++i % 1000 == 0)
+				System.out.printf(s, i);
 			int id = e.source.id;
-			d.Do(res.vertexes.get(id));
-			double shortestpath = d.dist[e.destination.id];
-			double r2;
-			if (r==-1)
-				r2 = Double.POSITIVE_INFINITY;
-			else
-				r2 = r;
-			if ((r2 * e.weight) <= shortestpath) 
-				res.addEdge(e.source.id, e.destination.id, e.weight);
+			double shortestpath;
+			
+			if (cache_valid[id]) {
+				shortestpath = cache[id][e.destination.id];
+				//if (++j % 50 == 0)
+					//System.out.println("Saved "+j+" func calls" );
+			}
+			else {
+				d.Do(res.vertexes.get(id));
+				shortestpath = d.dist[e.destination.id];
+				System.arraycopy(d.dist, 0, cache[id], 0, n);
+				cache_valid[id]=true;                   	   //next time we won't run dijkstra again
+			}
+			if ((r2 * e.weight) <= shortestpath) {
+				res.addEdge(e);
+				java.util.Arrays.fill(cache_valid,false);      //we added a new edge, all previous results are invalid
+			}
 		}
 		return res;
 	}
@@ -233,7 +274,8 @@ public class Graph implements Serializable {
 		ObjectOutputStream out = null;
 		try {
 			fos = new FileOutputStream(filename);
-			out = new ObjectOutputStream(fos);
+			GZIPOutputStream gos = new GZIPOutputStream(fos);
+			out = new ObjectOutputStream(gos);
 			out.writeObject(this);
 
 			out.close();
@@ -248,29 +290,25 @@ public class Graph implements Serializable {
 		ObjectInputStream in = null;
 		try {
 			fis = new FileInputStream(filename);
-			in = new ObjectInputStream(fis);
+			GZIPInputStream gs = new GZIPInputStream(fis);
+			in = new ObjectInputStream(gs);
 			g = (Graph) in.readObject();
 			in.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		g.fixAdjencies();
+		// g.fixAdjencies();
 		return g;
 	}
 
 	/**
 	 * We save Vertex without adjency list, to avoid infinite recursion
+	 *
+	 * private void fixAdjencies() { for (Vertex v : vertexes) v.adjencies = new
+	 * ArrayList<Edge>(); for (Edge e : edges) { e.source.adjencies.add(e); } }
 	 */
-	private void fixAdjencies() {
-		for (Vertex v : vertexes)
-			v.adjencies = new ArrayList<Edge>();
-		for (Edge e : edges) {
-			e.source.adjencies.add(e);
-		}
-	}
-
 	public Graph MST_Prim() {
-		Graph g = Graph.newEmptyGraph(this.getGraphSize());
+		Graph g = new Graph(this.vertexes, new ArrayList<Edge>());
 
 		Set<Vertex> set = new HashSet<>();
 		set.add(this.vertexes.get(0));
@@ -280,7 +318,11 @@ public class Graph implements Serializable {
 			for (Edge e : this.edges) {
 				if (set.contains(e.source) && !set.contains(e.destination)) {
 					set.add(e.destination);
-					g.addEdge(e.source.id, e.destination.id, e.weight);
+					g.addEdge(e);
+					break;
+				} else if (set.contains(e.destination) && !set.contains(e.source)) {   //undirected graph, edges can go both ways
+					set.add(e.source);
+					g.addEdge(e);
 					break;
 				}
 			}
@@ -288,16 +330,18 @@ public class Graph implements Serializable {
 		return g;
 	}
 
-	
 	public void addEdge(int source_id, int destination_id, double weight) {
 
 		Edge e = new Edge(source_id + "->" + destination_id, this.vertexes.get(source_id), vertexes.get(destination_id), weight);
-		Edge e2 = new Edge(destination_id + "->" + source_id, this.vertexes.get(destination_id), this.vertexes.get(source_id),
-				weight);
 		edges.add(e);
-		edges.add(e2);
-		this.vertexes.get(source_id).adjencies.add(e);
-		this.vertexes.get(destination_id).adjencies.add(e2);
+		this.adjencies.get(source_id).add(e);
+		this.adjencies.get(destination_id).add(e);
+	}
+
+	public void addEdge(Edge e) {
+		this.edges.add(e);
+		this.adjencies.get(e.source.id).add(e);
+		this.adjencies.get(e.destination.id).add(e);
 	}
 
 	public double[][] Floyd_Warshall() {

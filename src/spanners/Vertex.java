@@ -1,17 +1,14 @@
+package spanners;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Vertex implements Serializable {
 
     private static final long serialVersionUID = -6317852784750296025L;
     public Integer id;
-    public List<Edge> adjencies;
 
     public Vertex(int id) {
 	this.id = id;
-	adjencies = new ArrayList<>();
     }
 
     public int getId() {

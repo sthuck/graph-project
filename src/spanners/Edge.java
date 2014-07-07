@@ -1,3 +1,4 @@
+package spanners;
 import java.io.Serializable;
 
 public class Edge implements Comparable<Edge>,Serializable {
