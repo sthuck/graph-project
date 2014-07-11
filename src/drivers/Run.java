@@ -7,7 +7,7 @@ import algo.mstMaker;
 import algo.spannerMaker;
 import dstructures.Graph;
 
-public class RunFromObjectFile {
+public class Run {
 
 	public static void main(String[] args) {
 		if (args.length < 3)
