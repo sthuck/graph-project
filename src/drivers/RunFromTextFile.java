@@ -1,4 +1,7 @@
-package spanners;
+package drivers;
+
+import algo.spannerMaker;
+import dstructures.Graph;
 
 public class RunFromTextFile {
 
@@ -14,7 +17,7 @@ public class RunFromTextFile {
 	System.out.println("Running Floyd-Marshell");
 	double dist[][] = graph.Floyd_Warshall();
 	System.out.println("Generating Spanner");
-	Graph spanner = graph.MakeRSpanner(r);
+	Graph spanner =spannerMaker.MakeRSpanner(graph, r);
 	//spanner.toCSV(args[3]+"-edges.csv", args[3]+"-nodes.csv");
 	System.out.println("Running FloydMarshell on spanner");
 	double dist2[][] = spanner.Floyd_Warshall();

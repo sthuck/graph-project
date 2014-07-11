@@ -1,4 +1,4 @@
-package spanners;
+package dstructures;
 import java.io.Serializable;
 
 public class Edge implements Comparable<Edge>,Serializable {
