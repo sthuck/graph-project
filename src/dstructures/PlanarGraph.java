@@ -2,13 +2,20 @@ package dstructures;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import megamu.mesh.Voronoi;
+import org.w3c.dom.Element;
+
+
 
 
 public class PlanarGraph extends Graph {
@@ -114,9 +121,44 @@ public class PlanarGraph extends Graph {
 			if (vertexMap.containsKey(v2))
 				id2 = vertexMap.get(v2);
 			else continue;
-			res.addEdge(id1, id2, r.nextInt(weight));
+			res.addEdge(id1, id2, r.nextInt(weight)+1);
 		}
 		
+		return res;
+	}
+
+
+	public static PlanarGraph importYED(InputStream is,int randrange) {
+		Random rand = new Random();
+		PlanarGraph res = null;
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+				.newInstance();
+		DocumentBuilder dBuilder;
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(is);
+			doc.getDocumentElement().normalize();
+			NodeList nList = doc.getElementsByTagName("node");
+			NodeList nList2 = doc.getElementsByTagName("edge");
+			res = PlanarGraph.newEmptyGraph(nList.getLength());
+			for (int i=0;i<nList.getLength();i++) {
+				Element eElement = (Element) nList.item(i);
+				Float x = Float.parseFloat(eElement.getElementsByTagName("y:Geometry").item(0).getAttributes().getNamedItem("x").getNodeValue());
+				Float y = Float.parseFloat(eElement.getElementsByTagName("y:Geometry").item(0).getAttributes().getNamedItem("y").getNodeValue());
+				res.updateVertexPosition(new Pair<Float>(x,y), i);
+			}
+			
+			for (int i=0;i<nList2.getLength();i++) {
+				Element eElement = (Element) nList2.item(i);
+				int source = Integer.parseInt(eElement.getAttribute("source").substring(1));
+				int target = Integer.parseInt(eElement.getAttribute("target").substring(1));
+				res.addEdge(source, target, rand.nextInt(randrange)+1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		return res;
 	}
 }

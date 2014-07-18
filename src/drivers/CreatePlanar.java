@@ -19,8 +19,9 @@ public class CreatePlanar {
 	}
 
 	private static void usage() {
-	    	System.out.println("Saves the file as java seralized object");
+	    	System.out.println("generates a Planar Graph based on voronoi diagram");
 		System.out.println("Usage: run [n] [max weight] [output]");
+		System.out.println(" n is number of points. |V|=~2*n");
 		System.exit(-1);
 	}
 
