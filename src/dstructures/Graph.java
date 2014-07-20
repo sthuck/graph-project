@@ -44,7 +44,31 @@ public class Graph implements Serializable {
 			}
 		return g;
 	}
-
+	
+	static public Graph createRandomGraphDensity(int n, double density, int max_weight) {
+		Random rand = new Random();
+		Graph g = newEmptyGraph(n);
+		if (density>1.0 || density<0) 
+			throw new IllegalArgumentException();
+		int numberOfEdges = (int)((n*(n-1)/2)*density);
+		int counter=0;
+		boolean mat[][] = new boolean[n][n];
+		while (counter<numberOfEdges) {
+			int i,j;
+			i = rand.nextInt(n);
+			j = rand.nextInt(n);
+			if (!mat[i][j]) {
+				counter++;
+				mat[i][j]=true;
+				mat[j][i]=true;
+				int weight = rand.nextInt(max_weight) + 1;
+				g.addEdge(i,j,weight);
+			}
+		}
+		return g;
+	}
+	
+	
 	public Graph(List<Vertex> vertexes, List<Edge> edges) {
 		this.vertexes = vertexes;
 		this.edges = edges;

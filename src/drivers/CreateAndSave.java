@@ -12,7 +12,7 @@ public class CreateAndSave {
 		int max_weight = Integer.parseInt(args[2]) - 1;
 		
 		System.err.println("Creating the Graph");
-		Graph graph = Graph.createRandomGraph(n, prob, max_weight);
+		Graph graph = Graph.createRandomGraphDensity(n, prob, max_weight);
 		graph.MakeGraphConnected();
 		System.err.println("Saving the Graph");
 		graph.SaveGraph(args[3]);

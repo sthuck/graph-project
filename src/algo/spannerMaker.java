@@ -1,6 +1,8 @@
 package algo;
 
 import java.util.Collections;
+
+import tests.testData;
 import dstructures.Edge;
 import dstructures.Graph;
 import algo.Dijkstra;
@@ -30,15 +32,16 @@ public class spannerMaker {
 			int id = e.source.id;
 			double shortestpath;
 			
-			if (cache_valid[id]) {
+			if (testData.tData.doCache && cache_valid[id]) {
 				shortestpath = cache[id][e.destination.id];
+				j++;
 				//if (++j % 50 == 0)
 					//System.out.println("Saved "+j+" func calls" );
 			}
 			else {
 				d.Do(res.vertexes.get(id));
 				shortestpath = d.dist[e.destination.id];
-				System.arraycopy(d.dist, 0, cache[id], 0, n);
+				if (testData.tData.doCache) System.arraycopy(d.dist, 0, cache[id], 0, n);
 				cache_valid[id]=true;                   	   //next time we won't run dijkstra again
 			}
 			if ((r2 * e.weight) <= shortestpath) {
@@ -46,6 +49,7 @@ public class spannerMaker {
 				java.util.Arrays.fill(cache_valid,false);      //we added a new edge, all previous results are invalid
 			}
 		}
+		testData.tData.callsSaved=j;
 		return res;
 	}
 

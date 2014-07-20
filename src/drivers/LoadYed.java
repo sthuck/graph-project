@@ -1,6 +1,6 @@
 package drivers;
 
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,6 @@ public class LoadYed {
 		String extension = null;
 		InputStream is = null;
 		System.out.println("Loading the graphml file");
-		File file = new File(in);
 		int i = in.lastIndexOf('.');
 		if (i > 0) 
 		    extension = in.substring(i+1);
@@ -40,7 +39,7 @@ public class LoadYed {
 		PlanarGraph graph = PlanarGraph.importYED(is, range);
 		//graph.MakeGraphConnected();
 		System.out.println("Saving the Graph");
-		graph.SaveGraph(args[2]);
+		graph.SaveGraph(out);
 		//graph.toCSV("orig-edges.csv", "orig-nodes.csv");
 	}
 
