@@ -7,7 +7,7 @@ public class Edge implements Comparable<Edge>,Serializable {
 	public final String id;
 	public final Vertex source;
 	public final Vertex destination;
-	public final double weight;
+	public double weight;
 
 	public Edge(String id, Vertex source, Vertex destination, double weight) {
 		this.id = id;

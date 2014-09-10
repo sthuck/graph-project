@@ -317,5 +317,20 @@ public class Graph implements Serializable {
 		this.adjencies.get(e.source.id).add(e);
 		this.adjencies.get(e.destination.id).add(e);
 	}
+	
+	public void GaussianWeights(int mean, int sd) {
+		Random rand = new Random(System.currentTimeMillis());
+		for (Edge e : this.edges) {
+			e.weight = Math.abs(rand.nextGaussian()*sd+mean);
+		}
+	}
+
+	public void TotalyRandomWeights(int range) {
+		for (Edge e : this.edges) {
+			Random rand = new Random(System.currentTimeMillis());
+			e.weight = rand.nextInt(range-1)+1;
+		}
+		
+	}
 
 }
