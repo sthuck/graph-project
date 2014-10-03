@@ -409,8 +409,8 @@ public class Voronoi {
 	 */
 	public HashMap<Integer, ArrayList<String>> getAdjacentRegions(int i) {
 
-		HashMap<Integer, ArrayList<String>> ret = new HashMap<>();
-		HashSet<Integer> tmp = new HashSet<>();
+		HashMap<Integer, ArrayList<String>> ret = new HashMap<Integer, ArrayList<String>>();
+		HashSet<Integer> tmp = new HashSet<Integer>();
 		boolean found = false;
 
 		for (ArrayList<PointReference> prl : crossPoints.values()) {
@@ -437,7 +437,7 @@ public class Voronoi {
 						ret.get(I).add(prl.get(0).md5);
 						
 					} else {						
-						ArrayList<String> md5s = new ArrayList<>();
+						ArrayList<String> md5s = new ArrayList<String>();
 						md5s.add(prl.get(0).md5);
 						ret.put(I,md5s);
 					}
@@ -462,7 +462,7 @@ public class Voronoi {
 	}
 	public float[][] getLinkingPoints(int i, int j, ArrayList<String> arrayList) {
 		
-		ArrayList<FloatPoint> tmp = new ArrayList<>();
+		ArrayList<FloatPoint> tmp = new ArrayList<FloatPoint>();
 		
 		for(String MD5 : arrayList) {
 			

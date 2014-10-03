@@ -42,7 +42,7 @@ public class Dijkstra {
 		dist = new Double[g.vertexes.size()];
 		previous = new Vertex[g.vertexes.size()];
 		mindist = new CompareByMindist(dist);
-		vertexQueue = new PriorityQueue<>(g.vertexes.size(), mindist);
+		vertexQueue = new PriorityQueue<Vertex>(g.vertexes.size(), mindist);
 	}
 
 	public void Do(Vertex source) {

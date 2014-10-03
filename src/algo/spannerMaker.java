@@ -27,7 +27,7 @@ public class spannerMaker {
 
 		Collections.sort(g.edges);
 		for (Edge e : g.edges) {
-			if (++i % 1000 == 0)
+			if (++i % 20000 == 0)
 				System.out.printf(s, i);
 			int id = e.source.id;
 			double shortestpath;

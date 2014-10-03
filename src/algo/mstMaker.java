@@ -12,7 +12,7 @@ public class mstMaker {
 	public static Graph MST_Prim(Graph g) {
 		Graph res = g.newCopyEmptyGraph();
 
-		Set<Vertex> set = new HashSet<>();
+		Set<Vertex> set = new HashSet<Vertex>();
 		set.add(g.vertexes.get(0));
 
 		Collections.sort(g.edges);

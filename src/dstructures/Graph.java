@@ -161,14 +161,14 @@ public class Graph implements Serializable {
 	 * 
 	 */
 	public List<Set<Vertex>> getConnectedElements() {
-		List<Set<Vertex>> res = new LinkedList<>();
-		Set<Vertex> all = new HashSet<>();
+		List<Set<Vertex>> res = new LinkedList<Set<Vertex>>();
+		Set<Vertex> all = new HashSet<Vertex>();
 		for (Vertex v : this.vertexes)
 			all.add(v);
 
 		while (!all.isEmpty()) {
-			Set<Vertex> V = new HashSet<>();
-			Queue<Vertex> Q = new LinkedList<>();
+			Set<Vertex> V = new HashSet<Vertex>();
+			Queue<Vertex> Q = new LinkedList<Vertex>();
 			Vertex v = all.iterator().next();
 			Q.add(v);
 			V.add(v);

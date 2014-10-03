@@ -8,11 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
 import megamu.mesh.Voronoi;
+
 import org.w3c.dom.Element;
 
 
@@ -29,7 +33,7 @@ public class PlanarGraph extends Graph {
 	public PlanarGraph(List<Vertex> vertexes, List<Edge> edges) {
 		super(vertexes, edges);
 		int n = vertexes.size();
-		vertex_pos = new ArrayList<>(n);
+		vertex_pos = new ArrayList<Pair<Float>>(n);
 		for (int i=0;i<n;i++)
 			vertex_pos.add(null);
 	}
@@ -87,7 +91,7 @@ public class PlanarGraph extends Graph {
 		
 		//finding out how many vertices we have
 		float[][] edges = myVoronoi.getEdges();
-		HashMap<Pair<Float>, Integer> vertexMap = new HashMap<>();
+		HashMap<Pair<Float>, Integer> vertexMap = new HashMap<Pair<Float>, Integer>();
 
 		
 		int id=0;
@@ -97,10 +101,10 @@ public class PlanarGraph extends Graph {
 					|| edges[j][2] < 0 || edges[j][3] < 0)
 				continue;
 			
-			Pair<Float> v1 = new Pair<>(edges[j][0], edges[j][1]);
+			Pair<Float> v1 = new Pair<Float>(edges[j][0], edges[j][1]);
 			if (!vertexMap.containsKey(v1))
 				vertexMap.put(v1, id++);
-			Pair<Float> v2 = new Pair<>(edges[j][2], edges[j][3]);
+			Pair<Float> v2 = new Pair<Float>(edges[j][2], edges[j][3]);
 			if (!vertexMap.containsKey(v2))
 				vertexMap.put(v2, id++);
 		}
@@ -113,11 +117,11 @@ public class PlanarGraph extends Graph {
 		
 		for (int j = 0; j < edges.length; j++) {
 			int id1,id2;
-			Pair<Float> v1 = new Pair<>(edges[j][0], edges[j][1]);
+			Pair<Float> v1 = new Pair<Float>(edges[j][0], edges[j][1]);
 			if (vertexMap.containsKey(v1))
 				id1 = vertexMap.get(v1);
 			else continue;
-			Pair<Float> v2 = new Pair<>(edges[j][2], edges[j][3]);
+			Pair<Float> v2 = new Pair<Float>(edges[j][2], edges[j][3]);
 			if (vertexMap.containsKey(v2))
 				id2 = vertexMap.get(v2);
 			else continue;
