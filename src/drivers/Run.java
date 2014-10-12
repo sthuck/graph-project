@@ -13,7 +13,7 @@ public class Run {
 		if (args.length < 3)
 			usage();
 		String filename = args[0];
-		int r = Integer.parseInt(args[1]);
+		double r = Double.parseDouble(args[1]);
 		boolean docheck = (Integer.parseInt(args[2])==0) ? false : true;
 
 		System.out.print("Loading the Graph...");

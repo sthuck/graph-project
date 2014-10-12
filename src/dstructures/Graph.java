@@ -325,12 +325,4 @@ public class Graph implements Serializable {
 		}
 	}
 
-	public void TotalyRandomWeights(int range) {
-		for (Edge e : this.edges) {
-			Random rand = new Random(System.currentTimeMillis());
-			e.weight = rand.nextInt(range-1)+1;
-		}
-		
-	}
-
 }

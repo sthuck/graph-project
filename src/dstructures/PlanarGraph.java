@@ -46,7 +46,7 @@ public class PlanarGraph extends Graph {
 		return new PlanarGraph(vertices, edges);
 	}
 	
-	public Graph newCopyEmptyEdgesGraph() {
+	public Graph newCopyEmptyGraph() {
 		PlanarGraph res = new PlanarGraph(this.vertexes, new ArrayList<Edge>());
 		res.vertex_pos = this.vertex_pos;
 		return res;
@@ -164,5 +164,14 @@ public class PlanarGraph extends Graph {
 			System.exit(-1);
 		}
 		return res;
+	}
+	
+	public void makeEucleadWeights() {
+		for (Edge e : edges) {
+			Pair<Float>v1pos = vertex_pos.get(e.destination.id);
+			Pair<Float>v2pos = vertex_pos.get(e.source.id);
+			double weight = Math.sqrt(Math.pow((v1pos.x-v2pos.x),2)+Math.pow((v1pos.y-v2pos.y),2));
+			e.weight=weight;
+		}
 	}
 }

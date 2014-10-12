@@ -18,7 +18,7 @@ public class SpannerTest {
 		Graph g = Graph.createRandomGraph(graphSize, prob, 100);
 		g.MakeGraphConnected();
 		//g.GaussianWeights(75, 10);
-		g.TotalyRandomWeights(100);
+		//g.TotalyRandomWeights(100);
 		dist = algo.FloydWarshall.Do(g);
 		wo.write("orig,"+g.edges.size()+","+g.getWeight()+","+FloydWarshall.avergeShortestDistance(dist)+"\n");
 		for (int i=1;i<15;i++) {

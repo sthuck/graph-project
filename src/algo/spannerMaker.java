@@ -9,13 +9,13 @@ import algo.Dijkstra;
 
 public class spannerMaker {
 	
-	public static Graph MakeRSpanner(Graph g, int r) {
+	public static Graph MakeRSpanner(Graph g, double f) {
 		Graph res = g.newCopyEmptyGraph();
 		Dijkstra d = new Dijkstra(res);
 		double r2;
-		if (r == -1)
+		if (f == -1)
 			r2 = Double.POSITIVE_INFINITY;
-		else r2 = r;
+		else r2 = f;
 		int n = res.getGraphSize();
 		
 		Double cache[][] = new Double[n][n];
